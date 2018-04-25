@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Alphamapshaderclass.cpp" />
     <ClCompile Include="Bitmapclass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="Timerclass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Alphamapshaderclass.h" />
     <ClInclude Include="Bitmapclass.h" />
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="Colorshaderclass.h" />
@@ -176,6 +178,8 @@
     <ClInclude Include="Timerclass.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Alphamap.ps" />
+    <None Include="Alphamap.vs" />
     <None Include="Color.ps" />
     <None Include="Color.vs" />
     <None Include="Font.ps" />

@@ -241,6 +241,28 @@ bool InputClass::IsRightArrowPressed()
 	return false;
 }
 
+bool InputClass::IsUpArrowPressed()
+{
+	// Do a bitwise and on the keyboard state to check if the left arrow key is currently being pressed.
+	if (m_keyboardState[DIK_UP] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsDownArrowPressed()
+{
+	// Do a bitwise and on the keyboard state to check if the left arrow key is currently being pressed.
+	if (m_keyboardState[DIK_DOWN] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
 {
 	mouseX = m_mouseX;

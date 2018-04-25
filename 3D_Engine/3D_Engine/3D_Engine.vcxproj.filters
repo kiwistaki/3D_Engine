@@ -90,6 +90,9 @@
     <ClCompile Include="Timerclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Alphamapshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bitmapclass.h">
@@ -164,6 +167,9 @@
     <ClInclude Include="Timerclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Alphamapshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Color.ps">
@@ -200,6 +206,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Lightmap.ps">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Alphamap.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Alphamap.ps">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

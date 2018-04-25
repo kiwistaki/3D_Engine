@@ -12,12 +12,10 @@
 #include "cameraclass.h"
 #include "textclass.h"
 #include "modelclass.h"
-#include "lightshaderclass.h"
-#include "lightclass.h"
 #include "modellistclass.h"
 #include "frustumclass.h"
-#include "multitextureshaderclass.h"
-#include "lightmapshaderclass.h"
+#include "Lightclass.h"
+#include "Alphamapshaderclass.h"
 
 /////////////
 // GLOBALS //
@@ -39,7 +37,7 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(int, int, float);
+	bool Frame(int, int, float, float);
 	bool Render();
 
 private:
@@ -47,12 +45,10 @@ private:
 	CameraClass* m_Camera;
 	TextClass* m_Text;
 	ModelClass* m_Model;
-	LightShaderClass* m_LightShader;
-	LightClass* m_Light;
 	ModelListClass* m_ModelList;
 	FrustumClass* m_Frustum;
-	MultiTextureShaderClass* m_MultiTextureShader;
-	LightMapShaderClass* m_LightMapShader;
+	LightClass* m_Light;
+	AlphaMapShaderClass* m_AlphaMapShader;
 };
 
 #endif

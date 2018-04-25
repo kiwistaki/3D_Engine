@@ -9,12 +9,10 @@ GraphicsClass::GraphicsClass()
 	m_Camera = 0;
 	m_Text = 0;
 	m_Model = 0;
-	m_LightShader = 0;
-	m_Light = 0;
 	m_ModelList = 0;
 	m_Frustum = 0;
-	m_MultiTextureShader = 0;
-	m_LightMapShader = 0;
+	m_Light = 0;
+	m_AlphaMapShader = 0;
 }
 
 GraphicsClass::GraphicsClass(const GraphicsClass& other)
@@ -80,55 +78,10 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), (char*)"../3D_Engine/data/sphere.txt", (WCHAR*)L"../3D_Engine/data/stone01.dds", (WCHAR*)L"../3D_Engine/data/light01.dds");
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), (char*)"../3D_Engine/data/sphere.txt", (WCHAR*)L"../3D_Engine/data/stone01.dds", (WCHAR*)L"../3D_Engine/data/dirt01.dds", (WCHAR*)L"../3D_Engine/data/alpha01.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create the light map shader object.
-	m_LightMapShader = new LightMapShaderClass;
-	if (!m_LightMapShader)
-	{
-		return false;
-	}
-
-	// Initialize the light map shader object.
-	result = m_LightMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the light map shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create the multitexture shader object.
-	m_MultiTextureShader = new MultiTextureShaderClass;
-	if (!m_MultiTextureShader)
-	{
-		return false;
-	}
-
-	// Initialize the multitexture shader object.
-	result = m_MultiTextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create the light shader object.
-	m_LightShader = new LightShaderClass;
-	if (!m_LightShader)
-	{
-		return false;
-	}
-
-	// Initialize the light shader object.
-	result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -161,6 +114,21 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	// Create the alpha map shader object.
+	m_AlphaMapShader = new AlphaMapShaderClass;
+	if (!m_AlphaMapShader)
+	{
+		return false;
+	}
+
+	// Initialize the alpha map shader object.
+	result = m_AlphaMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the alpha map shader object.", L"Error", MB_OK);
+		return false;
+	}
+
 	// Create the frustum object.
 	m_Frustum = new FrustumClass;
 	if (!m_Frustum)
@@ -173,20 +141,12 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsClass::Shutdown()
 {
-	// Release the light map shader object.
-	if (m_LightMapShader)
+	// Release the alpha map shader object.
+	if (m_AlphaMapShader)
 	{
-		m_LightMapShader->Shutdown();
-		delete m_LightMapShader;
-		m_LightMapShader = 0;
-	}
-
-	// Release the multitexture shader object.
-	if (m_MultiTextureShader)
-	{
-		m_MultiTextureShader->Shutdown();
-		delete m_MultiTextureShader;
-		m_MultiTextureShader = 0;
+		m_AlphaMapShader->Shutdown();
+		delete m_AlphaMapShader;
+		m_AlphaMapShader = 0;
 	}
 
 	// Release the text object.
@@ -215,7 +175,7 @@ void GraphicsClass::Shutdown()
 	return;
 }
 
-bool GraphicsClass::Frame(int fps, int cpu, float rotationY)
+bool GraphicsClass::Frame(int fps, int cpu, float rotationX, float rotationY)
 {
 	bool result;
 	
@@ -237,7 +197,7 @@ bool GraphicsClass::Frame(int fps, int cpu, float rotationY)
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 
 	// Set the rotation of the camera.
-	m_Camera->SetRotation(0.0f, rotationY, 0.0f);
+	m_Camera->SetRotation(rotationX, rotationY, 0.0f);
 
 	return true;
 }
@@ -293,20 +253,10 @@ bool GraphicsClass::Render()
 			// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 			m_Model->Render(m_Direct3D->GetDeviceContext());
 
-			// Render the model using the light shader.
-			/*m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-				m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbiantColor(), m_Light->GetDiffuseColor(),
+			// Render the model using the alpha map shader.
+			m_AlphaMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+				m_Model->GetTextures(), m_Light->GetDirection(), m_Light->GetAmbiantColor(), m_Light->GetDiffuseColor(),
 				m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
-
-			// Render the model using the multitexture shader.
-			m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-				m_Model->GetTextures());
-			*/
-
-			// Render the model using the light map shader.
-			m_LightMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-				m_Model->GetTextures());
-
 
 			// Reset to the original world matrix.
 			m_Direct3D->GetWorldMatrix(worldMatrix);

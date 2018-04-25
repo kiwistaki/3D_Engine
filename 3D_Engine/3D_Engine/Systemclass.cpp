@@ -209,7 +209,7 @@ void SystemClass::Run()
 bool SystemClass::Frame()
 {
 	bool keyDown, result;
-	float rotationY;
+	float rotationY, rotationX;
 
 	// Update the system stats.
 	m_Timer->Frame();
@@ -226,18 +226,24 @@ bool SystemClass::Frame()
 	// Set the frame time for calculating the updated position.
 	m_Position->SetFrameTime(m_Timer->GetTime());
 
-	// Check if the left or right arrow key has been pressed, if so rotate the camera accordingly.
+	// Check if the arrow keys have been pressed, if so rotate the camera accordingly.
 	keyDown = m_Input->IsLeftArrowPressed();
 	m_Position->TurnLeft(keyDown);
 
 	keyDown = m_Input->IsRightArrowPressed();
 	m_Position->TurnRight(keyDown);
 
+	keyDown = m_Input->IsUpArrowPressed();
+	m_Position->TurnUp(keyDown);
+
+	keyDown = m_Input->IsDownArrowPressed();
+	m_Position->TurnDown(keyDown);
+
 	// Get the current view point rotation.
-	m_Position->GetRotation(rotationY);
+	m_Position->GetRotation(rotationX, rotationY);
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(m_Fps->GetFps(), m_Cpu->GetCpuPercentage(), rotationY);
+	result = m_Graphics->Frame(m_Fps->GetFps(), m_Cpu->GetCpuPercentage(), rotationX, rotationY);
 	if (!result)
 	{
 		return false;
