@@ -11,7 +11,7 @@
 #include <d3d11.h>
 #include <d3dx11tex.h>
 
-#define NUM_OF_TEXT 3
+#define NUM_OF_TEXT 2
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: TextureArrayClass
@@ -23,7 +23,7 @@ public:
 	TextureArrayClass(const TextureArrayClass&);
 	~TextureArrayClass();
 
-	bool Initialize(ID3D11Device*, WCHAR*, WCHAR*, WCHAR*);
+	bool Initialize(ID3D11Device*, WCHAR*, WCHAR*);
 	void Shutdown();
 
 	ID3D11ShaderResourceView** GetTextureArray();

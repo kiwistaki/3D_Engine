@@ -19,7 +19,7 @@ TextureArrayClass::~TextureArrayClass()
 {
 }
 
-bool TextureArrayClass::Initialize(ID3D11Device* device, WCHAR* filename1, WCHAR* filename2, WCHAR* filename3)
+bool TextureArrayClass::Initialize(ID3D11Device* device, WCHAR* filename1, WCHAR* filename2)
 {
 	HRESULT result;
 
@@ -37,12 +37,12 @@ bool TextureArrayClass::Initialize(ID3D11Device* device, WCHAR* filename1, WCHAR
 		return false;
 	}
 
-	// Load the second texture in.
-	result = D3DX11CreateShaderResourceViewFromFile(device, filename3, NULL, NULL, &m_textures[2], NULL);
+	// Load the third texture in.
+	/*result = D3DX11CreateShaderResourceViewFromFile(device, filename3, NULL, NULL, &m_textures[2], NULL);
 	if (FAILED(result))
 	{
 		return false;
-	}
+	}*/
 
 	return true;
 }

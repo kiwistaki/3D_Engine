@@ -15,7 +15,7 @@
 #include "modellistclass.h"
 #include "frustumclass.h"
 #include "Lightclass.h"
-#include "Alphamapshaderclass.h"
+#include "Bumpmapshaderclass.h"
 
 /////////////
 // GLOBALS //
@@ -48,7 +48,7 @@ private:
 	ModelListClass* m_ModelList;
 	FrustumClass* m_Frustum;
 	LightClass* m_Light;
-	AlphaMapShaderClass* m_AlphaMapShader;
+	BumpMapShaderClass* m_BumpMapShader;
 };
 
 #endif
