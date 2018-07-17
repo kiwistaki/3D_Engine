@@ -21,9 +21,6 @@
     <ClCompile Include="Cameraclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Colorshaderclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Cpuclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,12 +48,6 @@
     <ClCompile Include="Lightclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Lightmapshaderclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Lightshaderclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -64,9 +55,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Modellistclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Multitextureshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Positionclass.cpp">
@@ -84,16 +72,10 @@
     <ClCompile Include="Textureclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Textureshaderclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Timerclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Alphamapshaderclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Bumpmapshaderclass.cpp">
+    <ClCompile Include="Sphereshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -102,9 +84,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Cameraclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Colorshaderclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Cpuclass.h">
@@ -134,19 +113,10 @@
     <ClInclude Include="Lightclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Lightmapshaderclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Lightshaderclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Modelclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Modellistclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Multitextureshaderclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Positionclass.h">
@@ -164,66 +134,24 @@
     <ClInclude Include="Textureclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Textureshaderclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Timerclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Alphamapshaderclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Bumpmapshaderclass.h">
+    <ClInclude Include="Sphereshaderclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Color.ps">
+    <None Include="Sphere.vs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Color.vs">
+    <None Include="Sphere.ps">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Font.ps">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Font.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Light.ps">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Light.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Texture.ps">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Texture.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Multitexture.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Multitexture.ps">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Lightmap.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Lightmap.ps">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Alphamap.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Alphamap.ps">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Bumpmap.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Bumpmap.ps">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

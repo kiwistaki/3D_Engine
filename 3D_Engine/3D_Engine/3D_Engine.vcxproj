@@ -123,11 +123,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Alphamapshaderclass.cpp" />
     <ClCompile Include="Bitmapclass.cpp" />
-    <ClCompile Include="Bumpmapshaderclass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
-    <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="Cpuclass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="Fontclass.cpp" />
@@ -137,26 +134,20 @@
     <ClCompile Include="Graphicsclass.cpp" />
     <ClCompile Include="Inputclass.cpp" />
     <ClCompile Include="Lightclass.cpp" />
-    <ClCompile Include="Lightmapshaderclass.cpp" />
-    <ClCompile Include="Lightshaderclass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Modelclass.cpp" />
     <ClCompile Include="Modellistclass.cpp" />
-    <ClCompile Include="Multitextureshaderclass.cpp" />
     <ClCompile Include="Positionclass.cpp" />
+    <ClCompile Include="Sphereshaderclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="Textclass.cpp" />
     <ClCompile Include="Texturearrayclass.cpp" />
     <ClCompile Include="Textureclass.cpp" />
-    <ClCompile Include="Textureshaderclass.cpp" />
     <ClCompile Include="Timerclass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Alphamapshaderclass.h" />
     <ClInclude Include="Bitmapclass.h" />
-    <ClInclude Include="Bumpmapshaderclass.h" />
     <ClInclude Include="Cameraclass.h" />
-    <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="Cpuclass.h" />
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="Fontclass.h" />
@@ -166,36 +157,21 @@
     <ClInclude Include="Graphicsclass.h" />
     <ClInclude Include="Inputclass.h" />
     <ClInclude Include="Lightclass.h" />
-    <ClInclude Include="Lightmapshaderclass.h" />
-    <ClInclude Include="Lightshaderclass.h" />
     <ClInclude Include="Modelclass.h" />
     <ClInclude Include="Modellistclass.h" />
-    <ClInclude Include="Multitextureshaderclass.h" />
     <ClInclude Include="Positionclass.h" />
+    <ClInclude Include="Sphereshaderclass.h" />
     <ClInclude Include="Systemclass.h" />
     <ClInclude Include="Textclass.h" />
     <ClInclude Include="Texturearrayclass.h" />
     <ClInclude Include="Textureclass.h" />
-    <ClInclude Include="Textureshaderclass.h" />
     <ClInclude Include="Timerclass.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Alphamap.ps" />
-    <None Include="Alphamap.vs" />
-    <None Include="Bumpmap.ps" />
-    <None Include="Bumpmap.vs" />
-    <None Include="Color.ps" />
-    <None Include="Color.vs" />
     <None Include="Font.ps" />
     <None Include="Font.vs" />
-    <None Include="Light.ps" />
-    <None Include="Light.vs" />
-    <None Include="Lightmap.ps" />
-    <None Include="Lightmap.vs" />
-    <None Include="Multitexture.ps" />
-    <None Include="Multitexture.vs" />
-    <None Include="Texture.ps" />
-    <None Include="Texture.vs" />
+    <None Include="Sphere.ps" />
+    <None Include="Sphere.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

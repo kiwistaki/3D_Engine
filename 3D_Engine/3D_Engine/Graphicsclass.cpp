@@ -12,7 +12,7 @@ GraphicsClass::GraphicsClass()
 	m_ModelList = 0;
 	m_Frustum = 0;
 	m_Light = 0;
-	m_BumpMapShader = 0;
+	m_SphereShader = 0;
 }
 
 GraphicsClass::GraphicsClass(const GraphicsClass& other)
@@ -78,7 +78,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), (char*)"../3D_Engine/data/sphere.txt", (WCHAR*)L"../3D_Engine/data/stone01.dds", (WCHAR*)L"../3D_Engine/data/bump01.dds");
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), (char*)"../3D_Engine/data/sphere.txt", (WCHAR*)L"../3D_Engine/data/stone01.dds", (WCHAR*)L"../3D_Engine/data/bump01.dds", (WCHAR*)L"../3D_Engine/data/spec02.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -97,7 +97,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetSpecularPower(32.0f);
+	m_Light->SetSpecularPower(16.0f);
 	
 	// Create the model list object.
 	m_ModelList = new ModelListClass;
@@ -115,34 +115,19 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Create the bump map shader object.
-	m_BumpMapShader = new BumpMapShaderClass;
-	if (!m_BumpMapShader)
+	m_SphereShader = new SphereShaderClass;
+	if (!m_SphereShader)
 	{
 		return false;
 	}
 
 	// Initialize the bump map shader object.
-	result = m_BumpMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	result = m_SphereShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the bump map shader object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the sphere shader object.", L"Error", MB_OK);
 		return false;
 	}
-
-	// Create the alpha map shader object.
-	/*m_AlphaMapShader = new AlphaMapShaderClass;
-	if (!m_AlphaMapShader)
-	{
-		return false;
-	}
-
-	// Initialize the alpha map shader object.
-	result = m_AlphaMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the alpha map shader object.", L"Error", MB_OK);
-		return false;
-	}*/
 
 	// Create the frustum object.
 	m_Frustum = new FrustumClass;
@@ -157,11 +142,11 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 void GraphicsClass::Shutdown()
 {
 	// Release the alpha map shader object.
-	if (m_BumpMapShader)
+	if (m_SphereShader)
 	{
-		m_BumpMapShader->Shutdown();
-		delete m_BumpMapShader;
-		m_BumpMapShader = 0;
+		m_SphereShader->Shutdown();
+		delete m_SphereShader;
+		m_SphereShader = 0;
 	}
 
 	// Release the text object.
@@ -269,8 +254,9 @@ bool GraphicsClass::Render()
 			m_Model->Render(m_Direct3D->GetDeviceContext());
 
 			// Render the model using the bump map shader.
-			m_BumpMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-				m_Model->GetTextures(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+			m_SphereShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+				m_Model->GetTextures(), m_Light->GetDirection(), m_Light->GetDiffuseColor(),
+				m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 
 			// Reset to the original world matrix.
 			m_Direct3D->GetWorldMatrix(worldMatrix);
