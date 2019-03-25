@@ -139,6 +139,7 @@
     <ClCompile Include="Modelclass.cpp" />
     <ClCompile Include="Modellistclass.cpp" />
     <ClCompile Include="Positionclass.cpp" />
+    <ClCompile Include="Reflectionshaderclass.cpp" />
     <ClCompile Include="Rendertextureclass.cpp" />
     <ClCompile Include="Sphereshaderclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Modelclass.h" />
     <ClInclude Include="Modellistclass.h" />
     <ClInclude Include="Positionclass.h" />
+    <ClInclude Include="Reflectionshaderclass.h" />
     <ClInclude Include="Rendertextureclass.h" />
     <ClInclude Include="Sphereshaderclass.h" />
     <ClInclude Include="Systemclass.h" />
@@ -178,6 +180,8 @@
     <None Include="Font.vs" />
     <None Include="light.ps" />
     <None Include="light.vs" />
+    <None Include="reflection.ps" />
+    <None Include="reflection.vs" />
     <None Include="Sphere.ps" />
     <None Include="Sphere.vs" />
     <None Include="texture.ps" />

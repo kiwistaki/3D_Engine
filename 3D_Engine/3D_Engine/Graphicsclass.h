@@ -4,15 +4,13 @@
 #ifndef _GRAPHICSCLASS_H_
 #define _GRAPHICSCLASS_H_
 
-
 /////////////
 // GLOBALS //
 /////////////
-const bool FULL_SCREEN = false;
+const bool FULL_SCREEN = true;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
-
 
 ///////////////////////
 // MY CLASS INCLUDES //
@@ -20,12 +18,9 @@ const float SCREEN_NEAR = 0.1f;
 #include "d3dclass.h"
 #include "cameraclass.h"
 #include "modelclass.h"
-#include "lightshaderclass.h"
-#include "lightclass.h"
 #include "rendertextureclass.h"
-#include "debugwindowclass.h"
+#include "reflectionshaderclass.h"
 #include "textureshaderclass.h"
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: GraphicsClass
@@ -50,10 +45,9 @@ private:
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
-	LightShaderClass* m_LightShader;
-	LightClass* m_Light;
+	ModelClass* m_FloorModel;
+	ReflectionShaderClass* m_ReflectionShader;
 	RenderTextureClass* m_RenderTexture;
-	DebugWindowClass* m_DebugWindow;
 	TextureShaderClass* m_TextureShader;
 };
 
