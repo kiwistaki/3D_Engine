@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "inputclass.h"
 
+
 InputClass::InputClass()
 {
 	m_directInput = 0;
@@ -10,17 +11,21 @@ InputClass::InputClass()
 	m_mouse = 0;
 }
 
+
 InputClass::InputClass(const InputClass& other)
 {
 }
+
 
 InputClass::~InputClass()
 {
 }
 
+
 bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
 {
 	HRESULT result;
+
 
 	// Store the screen size which will be used for positioning the mouse cursor.
 	m_screenWidth = screenWidth;
@@ -32,63 +37,63 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 
 	// Initialize the main direct input interface.
 	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL);
-	if (FAILED(result))
+	if(FAILED(result))
 	{
 		return false;
 	}
 
 	// Initialize the direct input interface for the keyboard.
 	result = m_directInput->CreateDevice(GUID_SysKeyboard, &m_keyboard, NULL);
-	if (FAILED(result))
+	if(FAILED(result))
 	{
 		return false;
 	}
 
 	// Set the data format.  In this case since it is a keyboard we can use the predefined data format.
 	result = m_keyboard->SetDataFormat(&c_dfDIKeyboard);
-	if (FAILED(result))
+	if(FAILED(result))
 	{
 		return false;
 	}
 
-	// Set the cooperative level of the keyboard to not share with other programs.
-	result = m_keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
-	if (FAILED(result))
+	// Set the cooperative level of the keyboard to share with other programs.
+	result = m_keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	if(FAILED(result))
 	{
 		return false;
 	}
 
 	// Now acquire the keyboard.
 	result = m_keyboard->Acquire();
-	if (FAILED(result))
+	if(FAILED(result))
 	{
 		return false;
 	}
 
 	// Initialize the direct input interface for the mouse.
 	result = m_directInput->CreateDevice(GUID_SysMouse, &m_mouse, NULL);
-	if (FAILED(result))
+	if(FAILED(result))
 	{
 		return false;
 	}
 
 	// Set the data format for the mouse using the pre-defined mouse data format.
 	result = m_mouse->SetDataFormat(&c_dfDIMouse);
-	if (FAILED(result))
+	if(FAILED(result))
 	{
 		return false;
 	}
 
 	// Set the cooperative level of the mouse to share with other programs.
 	result = m_mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-	if (FAILED(result))
+	if(FAILED(result))
 	{
 		return false;
 	}
 
 	// Acquire the mouse.
 	result = m_mouse->Acquire();
-	if (FAILED(result))
+	if(FAILED(result))
 	{
 		return false;
 	}
@@ -96,10 +101,11 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	return true;
 }
 
+
 void InputClass::Shutdown()
 {
 	// Release the mouse.
-	if (m_mouse)
+	if(m_mouse)
 	{
 		m_mouse->Unacquire();
 		m_mouse->Release();
@@ -107,7 +113,7 @@ void InputClass::Shutdown()
 	}
 
 	// Release the keyboard.
-	if (m_keyboard)
+	if(m_keyboard)
 	{
 		m_keyboard->Unacquire();
 		m_keyboard->Release();
@@ -115,7 +121,7 @@ void InputClass::Shutdown()
 	}
 
 	// Release the main interface to direct input.
-	if (m_directInput)
+	if(m_directInput)
 	{
 		m_directInput->Release();
 		m_directInput = 0;
@@ -124,20 +130,22 @@ void InputClass::Shutdown()
 	return;
 }
 
+
 bool InputClass::Frame()
 {
 	bool result;
 
+
 	// Read the current state of the keyboard.
 	result = ReadKeyboard();
-	if (!result)
+	if(!result)
 	{
 		return false;
 	}
 
 	// Read the current state of the mouse.
 	result = ReadMouse();
-	if (!result)
+	if(!result)
 	{
 		return false;
 	}
@@ -148,16 +156,18 @@ bool InputClass::Frame()
 	return true;
 }
 
+
 bool InputClass::ReadKeyboard()
 {
 	HRESULT result;
 
+
 	// Read the keyboard device.
 	result = m_keyboard->GetDeviceState(sizeof(m_keyboardState), (LPVOID)&m_keyboardState);
-	if (FAILED(result))
+	if(FAILED(result))
 	{
 		// If the keyboard lost focus or was not acquired then try to get control back.
-		if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
+		if((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
 		{
 			m_keyboard->Acquire();
 		}
@@ -166,20 +176,22 @@ bool InputClass::ReadKeyboard()
 			return false;
 		}
 	}
-
+		
 	return true;
 }
+
 
 bool InputClass::ReadMouse()
 {
 	HRESULT result;
 
+
 	// Read the mouse device.
 	result = m_mouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&m_mouseState);
-	if (FAILED(result))
+	if(FAILED(result))
 	{
 		// If the mouse lost focus or was not acquired then try to get control back.
-		if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
+		if((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
 		{
 			m_mouse->Acquire();
 		}
@@ -192,6 +204,7 @@ bool InputClass::ReadMouse()
 	return true;
 }
 
+
 void InputClass::ProcessInput()
 {
 	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
@@ -199,19 +212,20 @@ void InputClass::ProcessInput()
 	m_mouseY += m_mouseState.lY;
 
 	// Ensure the mouse location doesn't exceed the screen width or height.
-	if (m_mouseX < 0) { m_mouseX = 0; }
-	if (m_mouseY < 0) { m_mouseY = 0; }
-
-	if (m_mouseX > m_screenWidth) { m_mouseX = m_screenWidth; }
-	if (m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
-
+	if(m_mouseX < 0)  { m_mouseX = 0; }
+	if(m_mouseY < 0)  { m_mouseY = 0; }
+	
+	if(m_mouseX > m_screenWidth)  { m_mouseX = m_screenWidth; }
+	if(m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
+	
 	return;
 }
+
 
 bool InputClass::IsEscapePressed()
 {
 	// Do a bitwise and on the keyboard state to check if the escape key is currently being pressed.
-	if (m_keyboardState[DIK_ESCAPE] & 0x80)
+	if(m_keyboardState[DIK_ESCAPE] & 0x80)
 	{
 		return true;
 	}
@@ -219,49 +233,6 @@ bool InputClass::IsEscapePressed()
 	return false;
 }
 
-bool InputClass::IsLeftArrowPressed()
-{
-	// Do a bitwise and on the keyboard state to check if the left arrow key is currently being pressed.
-	if (m_keyboardState[DIK_LEFT] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool InputClass::IsRightArrowPressed()
-{
-	// Do a bitwise and on the keyboard state to check if the right arrow key is currently being pressed.
-	if (m_keyboardState[DIK_RIGHT] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool InputClass::IsUpArrowPressed()
-{
-	// Do a bitwise and on the keyboard state to check if the left arrow key is currently being pressed.
-	if (m_keyboardState[DIK_UP] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool InputClass::IsDownArrowPressed()
-{
-	// Do a bitwise and on the keyboard state to check if the left arrow key is currently being pressed.
-	if (m_keyboardState[DIK_DOWN] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
 
 void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
 {

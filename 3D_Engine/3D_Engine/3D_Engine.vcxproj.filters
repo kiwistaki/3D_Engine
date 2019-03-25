@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Bitmapclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Cameraclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -78,11 +75,20 @@
     <ClCompile Include="Sphereshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Rendertextureclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Debugwindowclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lightshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="textureshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bitmapclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Cameraclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -140,6 +146,18 @@
     <ClInclude Include="Sphereshaderclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Rendertextureclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Debugwindowclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lightshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="textureshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Sphere.vs">
@@ -152,6 +170,18 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Font.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="light.ps">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="light.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="texture.ps">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="texture.vs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

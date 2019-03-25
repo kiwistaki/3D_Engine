@@ -3,23 +3,28 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "lightclass.h"
 
+
 LightClass::LightClass()
 {
 }
+
 
 LightClass::LightClass(const LightClass& other)
 {
 }
 
+
 LightClass::~LightClass()
 {
 }
 
-void LightClass::SetAmbiantColor(float red, float green, float blue, float alpha)
+
+void LightClass::SetAmbientColor(float red, float green, float blue, float alpha)
 {
-	m_ambiantColor = D3DXVECTOR4(red, green, blue, alpha);
+	m_ambientColor = D3DXVECTOR4(red, green, blue, alpha);
 	return;
 }
+
 
 void LightClass::SetDiffuseColor(float red, float green, float blue, float alpha)
 {
@@ -27,11 +32,6 @@ void LightClass::SetDiffuseColor(float red, float green, float blue, float alpha
 	return;
 }
 
-void LightClass::SetDirection(float x, float y, float z)
-{
-	m_direction = D3DXVECTOR3(x, y, z);
-	return;
-}
 
 void LightClass::SetSpecularColor(float red, float green, float blue, float alpha)
 {
@@ -39,33 +39,46 @@ void LightClass::SetSpecularColor(float red, float green, float blue, float alph
 	return;
 }
 
+
 void LightClass::SetSpecularPower(float power)
 {
 	m_specularPower = power;
 	return;
 }
 
-D3DXVECTOR4 LightClass::GetAmbiantColor()
+
+void LightClass::SetDirection(float x, float y, float z)
 {
-	return m_ambiantColor;
+	m_direction = D3DXVECTOR3(x, y, z);
+	return;
 }
+
+
+D3DXVECTOR4 LightClass::GetAmbientColor()
+{
+	return m_ambientColor;
+}
+
 
 D3DXVECTOR4 LightClass::GetDiffuseColor()
 {
 	return m_diffuseColor;
 }
 
-D3DXVECTOR3 LightClass::GetDirection()
-{
-	return m_direction;
-}
 
 D3DXVECTOR4 LightClass::GetSpecularColor()
 {
 	return m_specularColor;
 }
 
+
 float LightClass::GetSpecularPower()
 {
 	return m_specularPower;
+}
+
+
+D3DXVECTOR3 LightClass::GetDirection()
+{
+	return m_direction;
 }

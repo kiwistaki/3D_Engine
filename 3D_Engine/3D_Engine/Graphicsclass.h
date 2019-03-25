@@ -1,21 +1,9 @@
-#pragma once
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: graphicsclass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _GRAPHICSCLASS_H_
 #define _GRAPHICSCLASS_H_
 
-//////////////
-// INCLUDES //
-//////////////
-#include "d3dclass.h"
-#include "cameraclass.h"
-#include "textclass.h"
-#include "modelclass.h"
-#include "modellistclass.h"
-#include "frustumclass.h"
-#include "Lightclass.h"
-#include "Sphereshaderclass.h"
 
 /////////////
 // GLOBALS //
@@ -24,6 +12,20 @@ const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
+
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
+#include "d3dclass.h"
+#include "cameraclass.h"
+#include "modelclass.h"
+#include "lightshaderclass.h"
+#include "lightclass.h"
+#include "rendertextureclass.h"
+#include "debugwindowclass.h"
+#include "textureshaderclass.h"
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: GraphicsClass
@@ -37,18 +39,22 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(int, int, float, float);
+	bool Frame();
 	bool Render();
 
 private:
-	D3DClass* m_Direct3D;
+	bool RenderToTexture();
+	bool RenderScene();
+
+private:
+	D3DClass* m_D3D;
 	CameraClass* m_Camera;
-	TextClass* m_Text;
 	ModelClass* m_Model;
-	ModelListClass* m_ModelList;
-	FrustumClass* m_Frustum;
+	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
-	SphereShaderClass* m_SphereShader;
+	RenderTextureClass* m_RenderTexture;
+	DebugWindowClass* m_DebugWindow;
+	TextureShaderClass* m_TextureShader;
 };
 
 #endif

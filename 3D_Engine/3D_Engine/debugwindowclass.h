@@ -1,41 +1,39 @@
-#pragma once
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: bitmapclass.h
+// Filename: debugwindowclass.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _BITMAPCLASS_H_
-#define _BITMAPCLASS_H_
+#ifndef _DEBUGWINDOWCLASS_H_
+#define _DEBUGWINDOWCLASS_H_
+
 
 //////////////
 // INCLUDES //
 //////////////
 #include <d3d11.h>
-#include <directxmath.h>
-#include "textureclass.h"
-using namespace DirectX;
+#include <d3dx10math.h>
+
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: BitmapClass
+// Class name: DebugWindowClass
 ////////////////////////////////////////////////////////////////////////////////
-class BitmapClass
+class DebugWindowClass
 {
 private:
 	struct VertexType
 	{
-		XMFLOAT3 position;
-		XMFLOAT2 texture;
+		D3DXVECTOR3 position;
+	    D3DXVECTOR2 texture;
 	};
 
 public:
-	BitmapClass();
-	BitmapClass(const BitmapClass&);
-	~BitmapClass();
+	DebugWindowClass();
+	DebugWindowClass(const DebugWindowClass&);
+	~DebugWindowClass();
 
-	bool Initialize(ID3D11Device*, int, int, WCHAR*, int, int);
+	bool Initialize(ID3D11Device*, int, int, int, int);
 	void Shutdown();
 	bool Render(ID3D11DeviceContext*, int, int);
 
 	int GetIndexCount();
-	ID3D11ShaderResourceView* GetTexture();
 
 private:
 	bool InitializeBuffers(ID3D11Device*);
@@ -43,13 +41,9 @@ private:
 	bool UpdateBuffers(ID3D11DeviceContext*, int, int);
 	void RenderBuffers(ID3D11DeviceContext*);
 
-	bool LoadTexture(ID3D11Device*, WCHAR*);
-	void ReleaseTexture();
-
 private:
-	ID3D11Buffer * m_vertexBuffer, *m_indexBuffer;
+	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
-	TextureClass* m_Texture;
 	int m_screenWidth, m_screenHeight;
 	int m_bitmapWidth, m_bitmapHeight;
 	int m_previousPosX, m_previousPosY;

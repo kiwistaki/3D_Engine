@@ -123,7 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bitmapclass.cpp" />
+    <ClCompile Include="Debugwindowclass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="Cpuclass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
@@ -134,19 +134,22 @@
     <ClCompile Include="Graphicsclass.cpp" />
     <ClCompile Include="Inputclass.cpp" />
     <ClCompile Include="Lightclass.cpp" />
+    <ClCompile Include="lightshaderclass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Modelclass.cpp" />
     <ClCompile Include="Modellistclass.cpp" />
     <ClCompile Include="Positionclass.cpp" />
+    <ClCompile Include="Rendertextureclass.cpp" />
     <ClCompile Include="Sphereshaderclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="Textclass.cpp" />
     <ClCompile Include="Texturearrayclass.cpp" />
     <ClCompile Include="Textureclass.cpp" />
+    <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="Timerclass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bitmapclass.h" />
+    <ClInclude Include="Debugwindowclass.h" />
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="Cpuclass.h" />
     <ClInclude Include="D3DClass.h" />
@@ -157,21 +160,28 @@
     <ClInclude Include="Graphicsclass.h" />
     <ClInclude Include="Inputclass.h" />
     <ClInclude Include="Lightclass.h" />
+    <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="Modelclass.h" />
     <ClInclude Include="Modellistclass.h" />
     <ClInclude Include="Positionclass.h" />
+    <ClInclude Include="Rendertextureclass.h" />
     <ClInclude Include="Sphereshaderclass.h" />
     <ClInclude Include="Systemclass.h" />
     <ClInclude Include="Textclass.h" />
     <ClInclude Include="Texturearrayclass.h" />
     <ClInclude Include="Textureclass.h" />
+    <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="Timerclass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Font.ps" />
     <None Include="Font.vs" />
+    <None Include="light.ps" />
+    <None Include="light.vs" />
     <None Include="Sphere.ps" />
     <None Include="Sphere.vs" />
+    <None Include="texture.ps" />
+    <None Include="texture.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
