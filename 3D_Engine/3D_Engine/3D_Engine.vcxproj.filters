@@ -90,6 +90,9 @@
     <ClCompile Include="Reflectionshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Depthshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cameraclass.h">
@@ -164,6 +167,9 @@
     <ClInclude Include="Reflectionshaderclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Depthshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Sphere.vs">
@@ -194,6 +200,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="reflection.ps">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="depth.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="depth.ps">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

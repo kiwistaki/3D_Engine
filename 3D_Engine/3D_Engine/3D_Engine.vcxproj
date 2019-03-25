@@ -127,6 +127,7 @@
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="Cpuclass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
+    <ClCompile Include="Depthshaderclass.cpp" />
     <ClCompile Include="Fontclass.cpp" />
     <ClCompile Include="Fontshaderclass.cpp" />
     <ClCompile Include="Fpsclass.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="Cpuclass.h" />
     <ClInclude Include="D3DClass.h" />
+    <ClInclude Include="Depthshaderclass.h" />
     <ClInclude Include="Fontclass.h" />
     <ClInclude Include="Fontshaderclass.h" />
     <ClInclude Include="Fpsclass.h" />
@@ -176,6 +178,8 @@
     <ClInclude Include="Timerclass.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="depth.ps" />
+    <None Include="depth.vs" />
     <None Include="Font.ps" />
     <None Include="Font.vs" />
     <None Include="light.ps" />

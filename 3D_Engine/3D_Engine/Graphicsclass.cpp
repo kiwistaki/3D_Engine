@@ -3,33 +3,25 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "graphicsclass.h"
 
-
 GraphicsClass::GraphicsClass()
 {
 	m_D3D = 0;
 	m_Camera = 0;
 	m_Model = 0;
-	m_FloorModel = 0;
-	m_ReflectionShader = 0;
-	m_RenderTexture = 0;
-	m_TextureShader = 0;
+	m_DepthShader = 0;
 }
-
 
 GraphicsClass::GraphicsClass(const GraphicsClass& other)
 {
 }
 
-
 GraphicsClass::~GraphicsClass()
 {
 }
 
-
 bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	bool result;
-
 		
 	// Create the Direct3D object.
 	m_D3D = new D3DClass;
@@ -52,6 +44,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
+	m_Camera->SetPosition(0.0f, 2.0f, -10.0f);
 
 	// Create the model object.
 	m_Model = new ModelClass;
@@ -60,70 +53,26 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), (char*)"../3D_Engine/data/cube.txt", (WCHAR*)L"../3D_Engine/data/stone01.dds");
-	if(!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create the floor model object.
-	m_FloorModel = new ModelClass;
-	if (!m_FloorModel)
-	{
-		return false;
-	}
-
 	// Initialize the floor model object.
-	result = m_FloorModel->Initialize(m_D3D->GetDevice(), (char*)"../3D_Engine/data/floor.txt", (WCHAR*)L"../3D_Engine/data/blue01.dds");
+	result = m_Model->Initialize(m_D3D->GetDevice(), (char*)"../3D_Engine/data/floor.txt");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the floor model object.", L"Error", MB_OK);
 		return false;
 	}
 
-	// Create the render to texture object.
-	m_RenderTexture = new RenderTextureClass;
-	if(!m_RenderTexture)
+	// Create the depth shader object.
+	m_DepthShader = new DepthShaderClass;
+	if (!m_DepthShader)
 	{
 		return false;
 	}
 
-	// Initialize the render to texture object.
-	result = m_RenderTexture->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight);
-	if(!result)
-	{
-		return false;
-	}
-
-	// Create the texture shader object.
-	m_TextureShader = new TextureShaderClass;
-	if(!m_TextureShader)
-	{
-		return false;
-	}
-
-	// Initialize the texture shader object.
-	result = m_TextureShader->Initialize(m_D3D->GetDevice(), hwnd);
-	if(!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create the reflection shader object.
-	m_ReflectionShader = new ReflectionShaderClass;
-	if (!m_ReflectionShader)
-	{
-		return false;
-	}
-
-	// Initialize the reflection shader object.
-	result = m_ReflectionShader->Initialize(m_D3D->GetDevice(), hwnd);
+	// Initialize the depth shader object.
+	result = m_DepthShader->Initialize(m_D3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the reflection shader object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the depth shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -133,36 +82,12 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsClass::Shutdown()
 {
-	// Release the reflection shader object.
-	if (m_ReflectionShader)
+	// Release the depth shader object.
+	if (m_DepthShader)
 	{
-		m_ReflectionShader->Shutdown();
-		delete m_ReflectionShader;
-		m_ReflectionShader = 0;
-	}
-
-	// Release the floor model object.
-	if (m_FloorModel)
-	{
-		m_FloorModel->Shutdown();
-		delete m_FloorModel;
-		m_FloorModel = 0;
-	}
-
-	// Release the texture shader object.
-	if(m_TextureShader)
-	{
-		m_TextureShader->Shutdown();
-		delete m_TextureShader;
-		m_TextureShader = 0;
-	}
-
-	// Release the render to texture object.
-	if(m_RenderTexture)
-	{
-		m_RenderTexture->Shutdown();
-		delete m_RenderTexture;
-		m_RenderTexture = 0;
+		m_DepthShader->Shutdown();
+		delete m_DepthShader;
+		m_DepthShader = 0;
 	}
 
 	// Release the model object.
@@ -194,8 +119,14 @@ void GraphicsClass::Shutdown()
 
 bool GraphicsClass::Frame()
 {
-	// Set the position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	bool result;
+
+	// Render the graphics scene.
+	result = Render();
+	if (!result)
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -203,27 +134,38 @@ bool GraphicsClass::Frame()
 
 bool GraphicsClass::Render()
 {
-	D3DXMATRIX worldMatrix, viewMatrix, orthoMatrix;
+	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix;
 	bool result;
 
-	// Render the entire scene to the texture first.
-	result = RenderToTexture();
-	if(!result)
+
+	// Clear the buffers to begin the scene.
+	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Generate the view matrix based on the camera's position.
+	m_Camera->Render();
+
+	// Get the world, view, and projection matrices from the camera and d3d objects.
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_D3D->GetWorldMatrix(worldMatrix);
+	m_D3D->GetProjectionMatrix(projectionMatrix);
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the depth shader.
+	result = m_DepthShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	if (!result)
 	{
 		return false;
 	}
 
-	// Render the scene as normal to the back buffer.
-	result = RenderScene();
-	if(!result)
-	{
-		return false;
-	}
+	// Present the rendered scene to the screen.
+	m_D3D->EndScene();
 
 	return true;
 }
 
-bool GraphicsClass::RenderToTexture()
+/*bool GraphicsClass::RenderToTexture()
 {
 	D3DXMATRIX worldMatrix, reflectionViewMatrix, projectionMatrix;
 	static float rotation = 0.0f;
@@ -323,4 +265,4 @@ bool GraphicsClass::RenderScene()
 	m_D3D->EndScene();
 
 	return true;
-}
+}*/
