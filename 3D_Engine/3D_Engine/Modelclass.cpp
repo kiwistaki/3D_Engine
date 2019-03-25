@@ -22,26 +22,6 @@ ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device* device, char* modelFilename)
-{
-	bool result;
-
-	// Load in the model data,
-	result = LoadModel(modelFilename);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Initialize the vertex and index buffers.
-	result = InitializeBuffers(device);
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
-}
 
 bool ModelClass::Initialize(ID3D11Device* device, char* modelFilename, WCHAR* textureFilename)
 {
@@ -114,7 +94,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	VertexType* vertices;
 	unsigned long* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+    D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 	int i;
 
@@ -281,8 +261,10 @@ bool ModelClass::LoadModel(char* filename)
 	int i;
 
 
-	// Open the model file.  If it could not open the file then exit.
+	// Open the model file.
 	fin.open(filename);
+	
+	// If it could not open the file then exit.
 	if(fin.fail())
 	{
 		return false;
@@ -340,5 +322,23 @@ void ModelClass::ReleaseModel()
 		m_model = 0;
 	}
 
+	return;
+}
+
+
+void ModelClass::SetPosition(float x, float y, float z)
+{
+	m_positionX = x;
+	m_positionY = y;
+	m_positionZ = z;
+	return;
+}
+
+
+void ModelClass::GetPosition(float& x, float& y, float& z)
+{
+	x = m_positionX;
+	y = m_positionY;
+	z = m_positionZ;
 	return;
 }

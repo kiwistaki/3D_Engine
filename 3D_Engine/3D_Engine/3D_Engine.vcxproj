@@ -142,6 +142,7 @@
     <ClCompile Include="Positionclass.cpp" />
     <ClCompile Include="Reflectionshaderclass.cpp" />
     <ClCompile Include="Rendertextureclass.cpp" />
+    <ClCompile Include="Shadowshaderclass.cpp" />
     <ClCompile Include="Sphereshaderclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="Textclass.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Positionclass.h" />
     <ClInclude Include="Reflectionshaderclass.h" />
     <ClInclude Include="Rendertextureclass.h" />
+    <ClInclude Include="Shadowshaderclass.h" />
     <ClInclude Include="Sphereshaderclass.h" />
     <ClInclude Include="Systemclass.h" />
     <ClInclude Include="Textclass.h" />
@@ -186,6 +188,8 @@
     <None Include="light.vs" />
     <None Include="reflection.ps" />
     <None Include="reflection.vs" />
+    <None Include="shadow.ps" />
+    <None Include="shadow.vs" />
     <None Include="Sphere.ps" />
     <None Include="Sphere.vs" />
     <None Include="texture.ps" />

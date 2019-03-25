@@ -3,26 +3,36 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "graphicsclass.h"
 
+
 GraphicsClass::GraphicsClass()
 {
 	m_D3D = 0;
 	m_Camera = 0;
-	m_Model = 0;
-	m_DepthShader = 0;
+	m_CubeModel = 0;
+	m_GroundModel = 0;
+	m_SphereModel = 0;
+	m_Light = 0;
+	m_RenderTexture = 0;
+	m_DepthShader = 0;	
+	m_ShadowShader = 0;
 }
+
 
 GraphicsClass::GraphicsClass(const GraphicsClass& other)
 {
 }
 
+
 GraphicsClass::~GraphicsClass()
 {
 }
 
+
 bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	bool result;
-		
+
+
 	// Create the Direct3D object.
 	m_D3D = new D3DClass;
 	if(!m_D3D)
@@ -44,35 +54,119 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-	m_Camera->SetPosition(0.0f, 2.0f, -10.0f);
 
-	// Create the model object.
-	m_Model = new ModelClass;
-	if(!m_Model)
+	// Set the initial position of the camera.
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	
+	// Create the cube model object.
+	m_CubeModel = new ModelClass;
+	if(!m_CubeModel)
 	{
 		return false;
 	}
 
-	// Initialize the floor model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), (char*)"../3D_Engine/data/floor.txt");
-	if (!result)
+	// Initialize the cube model object.
+	result = m_CubeModel->Initialize(m_D3D->GetDevice(), (char*)"../3D_Engine/data/cube.txt", (WCHAR*)L"../3D_Engine/data/wall01.dds");
+	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the floor model object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the cube model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Set the position for the cube model.
+	m_CubeModel->SetPosition(-2.0f, 2.0f, 0.0f);
+
+	// Create the sphere model object.
+	m_SphereModel = new ModelClass;
+	if(!m_SphereModel)
+	{
+		return false;
+	}
+
+	// Initialize the sphere model object.
+	result = m_SphereModel->Initialize(m_D3D->GetDevice(), (char*)"../3D_Engine/data/sphere.txt", (WCHAR*)L"../3D_Engine/data/ice.dds");
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the sphere model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Set the position for the sphere model.
+	m_SphereModel->SetPosition(2.0f, 2.0f, 0.0f);
+
+	// Create the ground model object.
+	m_GroundModel = new ModelClass;
+	if(!m_GroundModel)
+	{
+		return false;
+	}
+
+	// Initialize the ground model object.
+	result = m_GroundModel->Initialize(m_D3D->GetDevice(), (char*)"../3D_Engine/data/plane01.txt", (WCHAR*)L"../3D_Engine/data/metal001.dds");
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the ground model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Set the position for the ground model.
+	m_GroundModel->SetPosition(0.0f, 1.0f, 0.0f);
+
+	// Create the light object.
+	m_Light = new LightClass;
+	if(!m_Light)
+	{
+		return false;
+	}
+
+	// Initialize the light object.
+	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
+	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Light->SetLookAt(0.0f, 0.0f, 0.0f);
+	m_Light->GenerateProjectionMatrix(SCREEN_DEPTH, SCREEN_NEAR);
+
+	// Create the render to texture object.
+	m_RenderTexture = new RenderTextureClass;
+	if(!m_RenderTexture)
+	{
+		return false;
+	}
+
+	// Initialize the render to texture object.
+	result = m_RenderTexture->Initialize(m_D3D->GetDevice(), SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT, SCREEN_DEPTH, SCREEN_NEAR);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the render to texture object.", L"Error", MB_OK);
 		return false;
 	}
 
 	// Create the depth shader object.
 	m_DepthShader = new DepthShaderClass;
-	if (!m_DepthShader)
+	if(!m_DepthShader)
 	{
 		return false;
 	}
 
 	// Initialize the depth shader object.
 	result = m_DepthShader->Initialize(m_D3D->GetDevice(), hwnd);
-	if (!result)
+	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the depth shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the shadow shader object.
+	m_ShadowShader = new ShadowShaderClass;
+	if(!m_ShadowShader)
+	{
+		return false;
+	}
+
+	// Initialize the shadow shader object.
+	result = m_ShadowShader->Initialize(m_D3D->GetDevice(), hwnd);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the shadow shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -82,20 +176,59 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsClass::Shutdown()
 {
+	// Release the shadow shader object.
+	if(m_ShadowShader)
+	{
+		m_ShadowShader->Shutdown();
+		delete m_ShadowShader;
+		m_ShadowShader = 0;
+	}
+
 	// Release the depth shader object.
-	if (m_DepthShader)
+	if(m_DepthShader)
 	{
 		m_DepthShader->Shutdown();
 		delete m_DepthShader;
 		m_DepthShader = 0;
 	}
 
-	// Release the model object.
-	if(m_Model)
+	// Release the render to texture object.
+	if(m_RenderTexture)
 	{
-		m_Model->Shutdown();
-		delete m_Model;
-		m_Model = 0;
+		m_RenderTexture->Shutdown();
+		delete m_RenderTexture;
+		m_RenderTexture = 0;
+	}
+
+	// Release the light object.
+	if(m_Light)
+	{
+		delete m_Light;
+		m_Light = 0;
+	}
+
+	// Release the ground model object.
+	if(m_GroundModel)
+	{
+		m_GroundModel->Shutdown();
+		delete m_GroundModel;
+		m_GroundModel = 0;
+	}
+
+	// Release the sphere model object.
+	if(m_SphereModel)
+	{
+		m_SphereModel->Shutdown();
+		delete m_SphereModel;
+		m_SphereModel = 0;
+	}
+
+	// Release the cube model object.
+	if(m_CubeModel)
+	{
+		m_CubeModel->Shutdown();
+		delete m_CubeModel;
+		m_CubeModel = 0;
 	}
 
 	// Release the camera object.
@@ -117,16 +250,107 @@ void GraphicsClass::Shutdown()
 }
 
 
-bool GraphicsClass::Frame()
+bool GraphicsClass::Frame(float posX, float posY, float posZ, float rotX, float rotY, float rotZ)
 {
 	bool result;
+	static float lightPositionX = -5.0f;
+
+
+	// Set the position of the camera.
+	m_Camera->SetPosition(posX, posY, posZ);
+	m_Camera->SetRotation(rotX, rotY, rotZ);
+
+	// Update the position of the light each frame.
+	lightPositionX += 0.05f;
+	if(lightPositionX > 5.0f)
+	{
+		lightPositionX = -5.0f;
+	}
+
+	// Update the position of the light.
+	m_Light->SetPosition(lightPositionX, 8.0f, -5.0f);
 
 	// Render the graphics scene.
 	result = Render();
-	if (!result)
+	if(!result)
 	{
 		return false;
 	}
+
+	return true;
+}
+
+
+bool GraphicsClass::RenderSceneToTexture()
+{
+	D3DXMATRIX worldMatrix, lightViewMatrix, lightProjectionMatrix, translateMatrix;
+	float posX, posY, posZ;
+	bool result;
+
+
+	// Set the render target to be the render to texture.
+	m_RenderTexture->SetRenderTarget(m_D3D->GetDeviceContext());
+
+	// Clear the render to texture.
+	m_RenderTexture->ClearRenderTarget(m_D3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Generate the light view matrix based on the light's position.
+	m_Light->GenerateViewMatrix();
+
+	// Get the world matrix from the d3d object.
+	m_D3D->GetWorldMatrix(worldMatrix);
+
+	// Get the view and orthographic matrices from the light object.
+	m_Light->GetViewMatrix(lightViewMatrix);
+	m_Light->GetProjectionMatrix(lightProjectionMatrix);
+
+	// Setup the translation matrix for the cube model.
+	m_CubeModel->GetPosition(posX, posY, posZ);
+	D3DXMatrixTranslation(&worldMatrix, posX, posY, posZ);
+
+	// Render the cube model with the depth shader.
+	m_CubeModel->Render(m_D3D->GetDeviceContext());
+	result = m_DepthShader->Render(m_D3D->GetDeviceContext(), m_CubeModel->GetIndexCount(), worldMatrix, lightViewMatrix, lightProjectionMatrix);
+	if(!result)
+	{
+		return false;
+	}
+
+	// Reset the world matrix.
+	m_D3D->GetWorldMatrix(worldMatrix);
+
+	// Setup the translation matrix for the sphere model.
+	m_SphereModel->GetPosition(posX, posY, posZ);
+	D3DXMatrixTranslation(&worldMatrix, posX, posY, posZ);
+
+	// Render the sphere model with the depth shader.
+	m_SphereModel->Render(m_D3D->GetDeviceContext());
+	result = m_DepthShader->Render(m_D3D->GetDeviceContext(), m_SphereModel->GetIndexCount(), worldMatrix, lightViewMatrix, lightProjectionMatrix);
+	if(!result)
+	{
+		return false;
+	}
+
+	// Reset the world matrix.
+	m_D3D->GetWorldMatrix(worldMatrix);
+
+	// Setup the translation matrix for the ground model.
+	m_GroundModel->GetPosition(posX, posY, posZ);
+	D3DXMatrixTranslation(&worldMatrix, posX, posY, posZ);
+
+	// Render the ground model with the depth shader.
+	m_GroundModel->Render(m_D3D->GetDeviceContext());
+	result = m_DepthShader->Render(m_D3D->GetDeviceContext(), m_GroundModel->GetIndexCount(), worldMatrix, lightViewMatrix, lightProjectionMatrix);
+	if(!result)
+	{
+		return false;
+	}
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.
+	m_D3D->SetBackBufferRenderTarget();
+
+	// Reset the viewport back to the original.
+	m_D3D->ResetViewport();
 
 	return true;
 }
@@ -134,9 +358,18 @@ bool GraphicsClass::Frame()
 
 bool GraphicsClass::Render()
 {
-	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, translateMatrix;
+	D3DXMATRIX lightViewMatrix, lightProjectionMatrix;
 	bool result;
+	float posX, posY, posZ;
 
+
+	// First render the scene to a texture.
+	result = RenderSceneToTexture();
+	if(!result)
+	{
+		return false;
+	}
 
 	// Clear the buffers to begin the scene.
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
@@ -144,125 +377,70 @@ bool GraphicsClass::Render()
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
 
+	// Generate the light view matrix based on the light's position.
+	m_Light->GenerateViewMatrix();
+
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_D3D->GetWorldMatrix(worldMatrix);
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(m_D3D->GetDeviceContext());
+	// Get the light's view and projection matrices from the light object.
+	m_Light->GetViewMatrix(lightViewMatrix);
+	m_Light->GetProjectionMatrix(lightProjectionMatrix);
 
-	// Render the model using the depth shader.
-	result = m_DepthShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Present the rendered scene to the screen.
-	m_D3D->EndScene();
-
-	return true;
-}
-
-/*bool GraphicsClass::RenderToTexture()
-{
-	D3DXMATRIX worldMatrix, reflectionViewMatrix, projectionMatrix;
-	static float rotation = 0.0f;
-
-	// Set the render target to be the render to texture.
-	m_RenderTexture->SetRenderTarget(m_D3D->GetDeviceContext(), m_D3D->GetDepthStencilView());
-
-	// Clear the render to texture.
-	m_RenderTexture->ClearRenderTarget(m_D3D->GetDeviceContext(), m_D3D->GetDepthStencilView(), 0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Use the camera to calculate the reflection matrix.
-	m_Camera->RenderReflection(-1.5f);
-
-	// Get the camera reflection view matrix instead of the normal view matrix.
-	reflectionViewMatrix = m_Camera->GetReflectionViewMatrix();
-
-	// Get the world and projection matrices.
-	m_D3D->GetWorldMatrix(worldMatrix);
-	m_D3D->GetProjectionMatrix(projectionMatrix);
-
-	// Update the rotation variable each frame.
-	rotation += (float)D3DX_PI * 0.005f;
-	if (rotation > 360.0f)
-	{
-		rotation -= 360.0f;
-	}
-	D3DXMatrixRotationY(&worldMatrix, rotation);
-
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(m_D3D->GetDeviceContext());
-
-	// Render the model using the texture shader and the reflection view matrix.
-	m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, reflectionViewMatrix,
-		projectionMatrix, m_Model->GetTexture());
-
-	// Reset the render target back to the original back buffer and not the render to texture anymore.
-	m_D3D->SetBackBufferRenderTarget();
-
-	return true;
-}
-
-
-bool GraphicsClass::RenderScene()
-{
-	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix;
-	bool result;
-	static float rotation = 0.0f;
-
-	// Clear the buffers to begin the scene.
-	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Generate the view matrix based on the camera's position.
-	m_Camera->Render();
-
-	// Get the world, view, and projection matrices from the camera and d3d objects.
-	m_D3D->GetWorldMatrix(worldMatrix);
-	m_Camera->GetViewMatrix(viewMatrix);
-	m_D3D->GetProjectionMatrix(projectionMatrix);
-
-	// Update the rotation variable each frame.
-	rotation += (float)D3DX_PI * 0.005f;
-	if (rotation > 360.0f)
-	{
-		rotation -= 360.0f;
-	}
-
-	// Multiply the world matrix by the rotation.
-	D3DXMatrixRotationY(&worldMatrix, rotation);
-
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(m_D3D->GetDeviceContext());
-
-	// Render the model with the texture shader.
-	result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix,
-		projectionMatrix, m_Model->GetTexture());
-	if (!result)
-	{
-		return false;
-	}
-
-	// Get the world matrix again and translate down for the floor model to render underneath the cube.
-	m_D3D->GetWorldMatrix(worldMatrix);
-	D3DXMatrixTranslation(&worldMatrix, 0.0f, -1.5f, 0.0f);
-
-	// Get the camera reflection view matrix.
-	reflectionMatrix = m_Camera->GetReflectionViewMatrix();
-
-	// Put the floor model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_FloorModel->Render(m_D3D->GetDeviceContext());
+	// Setup the translation matrix for the cube model.
+	m_CubeModel->GetPosition(posX, posY, posZ);
+	D3DXMatrixTranslation(&worldMatrix, posX, posY, posZ);
 	
-	// Render the floor model using the reflection shader, reflection texture, and reflection view matrix.
-	result = m_ReflectionShader->Render(m_D3D->GetDeviceContext(), m_FloorModel->GetIndexCount(), worldMatrix, viewMatrix,
-		projectionMatrix, m_FloorModel->GetTexture(), m_RenderTexture->GetShaderResourceView(),
-		reflectionMatrix);
+	// Put the cube model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_CubeModel->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the shadow shader.
+	result = m_ShadowShader->Render(m_D3D->GetDeviceContext(), m_CubeModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, lightViewMatrix, 
+									lightProjectionMatrix, m_CubeModel->GetTexture(), m_RenderTexture->GetShaderResourceView(), m_Light->GetPosition(),
+									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
+	if(!result)
+	{
+		return false;
+	}
+
+	// Reset the world matrix.
+	m_D3D->GetWorldMatrix(worldMatrix);
+
+	// Setup the translation matrix for the sphere model.
+	m_SphereModel->GetPosition(posX, posY, posZ);
+	D3DXMatrixTranslation(&worldMatrix, posX, posY, posZ);
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_SphereModel->Render(m_D3D->GetDeviceContext());
+	result = m_ShadowShader->Render(m_D3D->GetDeviceContext(), m_SphereModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, lightViewMatrix, 
+									lightProjectionMatrix, m_SphereModel->GetTexture(), m_RenderTexture->GetShaderResourceView(), m_Light->GetPosition(), 
+									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
+	if(!result)
+	{
+		return false;
+	}
+
+	// Reset the world matrix.
+	m_D3D->GetWorldMatrix(worldMatrix);
+
+	// Setup the translation matrix for the ground model.
+	m_GroundModel->GetPosition(posX, posY, posZ);
+	D3DXMatrixTranslation(&worldMatrix, posX, posY, posZ);
+
+	// Render the ground model using the shadow shader.
+	m_GroundModel->Render(m_D3D->GetDeviceContext());
+	result = m_ShadowShader->Render(m_D3D->GetDeviceContext(), m_GroundModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, lightViewMatrix,
+									lightProjectionMatrix, m_GroundModel->GetTexture(), m_RenderTexture->GetShaderResourceView(), m_Light->GetPosition(), 
+									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
+	if(!result)
+	{
+		return false;
+	}
 
 	// Present the rendered scene to the screen.
 	m_D3D->EndScene();
 
 	return true;
-}*/
+}

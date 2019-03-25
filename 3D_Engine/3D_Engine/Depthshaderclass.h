@@ -4,6 +4,7 @@
 #ifndef _DEPTHSHADERCLASS_H_
 #define _DEPTHSHADERCLASS_H_
 
+
 //////////////
 // INCLUDES //
 //////////////
@@ -12,6 +13,7 @@
 #include <d3dx11async.h>
 #include <fstream>
 using namespace std;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: DepthShaderClass
@@ -44,7 +46,7 @@ private:
 	void RenderShader(ID3D11DeviceContext*, int);
 
 private:
-	ID3D11VertexShader * m_vertexShader;
+	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
 	ID3D11InputLayout* m_layout;
 	ID3D11Buffer* m_matrixBuffer;

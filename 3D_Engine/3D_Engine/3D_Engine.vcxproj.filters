@@ -93,6 +93,9 @@
     <ClCompile Include="Depthshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shadowshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cameraclass.h">
@@ -170,6 +173,9 @@
     <ClInclude Include="Depthshaderclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Shadowshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Sphere.vs">
@@ -206,6 +212,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="depth.ps">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shadow.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shadow.ps">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
