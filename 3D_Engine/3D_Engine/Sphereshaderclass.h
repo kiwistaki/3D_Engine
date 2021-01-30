@@ -2,8 +2,6 @@
 // Filename: SphereShaderClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-#ifndef _SPHERESHADERCLASS_H_
-#define _SPHERESHADERCLASS_H_
 
 //////////////
 // INCLUDES //
@@ -69,5 +67,3 @@ private:
 	ID3D11Buffer* m_lightBuffer;
 	ID3D11Buffer* m_cameraBuffer;
 };
-
-#endif // !_SPHERESHADERCLASS_H_

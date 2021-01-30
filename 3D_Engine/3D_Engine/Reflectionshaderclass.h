@@ -1,8 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: reflectionshaderclass.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _REFLECTIONSHADERCLASS_H_
-#define _REFLECTIONSHADERCLASS_H_
+#pragma once
 
 //////////////
 // INCLUDES //
@@ -58,5 +57,3 @@ private:
 	ID3D11SamplerState* m_sampleState;
 	ID3D11Buffer* m_reflectionBuffer;
 };
-
-#endif
